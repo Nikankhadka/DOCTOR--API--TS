@@ -8,6 +8,7 @@ import * as dotenv from "dotenv"
 import session from "express-session"
 import cookieParser from "cookie-parser"
 import cors from "cors"
+import dbConnect from "./Configs/db"
 
 
 
@@ -46,7 +47,7 @@ app.use(session({
 
 //attaches cookie from header to req object
 app.use(cookieParser())
-
+app.use(dbConnect)
 
 
 
