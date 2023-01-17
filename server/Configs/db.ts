@@ -10,7 +10,7 @@ dotenv.config()
 const dbConnect=async()=>{
     try{
          await connect(`mongodb+srv://Doctor:doctordon1@doctordb.gdk6uh0.mongodb.net/test`)
-         console.log("Database Connected")
+         console.log("Database Connected new branch")
               
     }catch(e){
         console.log(e);
