@@ -2,7 +2,7 @@ import{Request,Response,NextFunction} from 'express'
 import joi from 'joi'
 
 
-export const validateInput=async(req:Request,res:Response,next:NextFunction)=>{
+export const validateRegister=async(req:Request,res:Response,next:NextFunction)=>{
     try{
       
         const registerSchema=joi.object({
