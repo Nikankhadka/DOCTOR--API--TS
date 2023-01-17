@@ -1,7 +1,8 @@
 import { Schema,model,Types } from "mongoose";
 
 import { IUser } from "../interface/Dbinterface";
-const userSchema = new Schema({
+
+const userSchema = new Schema <IUser>({
     firstName: {
         type: String,
         required: true
@@ -24,4 +25,5 @@ const userSchema = new Schema({
     }
 })
 
-export default  model<IUser>('User', userSchema);
+ const userModel=model<IUser>('User', userSchema);
+ export default userModel;

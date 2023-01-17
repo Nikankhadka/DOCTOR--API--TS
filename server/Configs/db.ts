@@ -7,13 +7,11 @@ import * as dotenv from "dotenv"
 dotenv.config()
 
     
-const dbConnect=async(req:Request,res:Response,next:NextFunction)=>{
+const dbConnect=async()=>{
     try{
          await connect(`mongodb+srv://Doctor:doctordon1@doctordb.gdk6uh0.mongodb.net/test`)
          console.log("Database Connected")
-         next()
-       
-          
+              
     }catch(e){
         console.log(e);
     }
