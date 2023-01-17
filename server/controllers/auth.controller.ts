@@ -1,5 +1,5 @@
 import { Request,Response } from "express"
-import { registerUserS } from "../services/auth.service"
+import { loginUserS, registerUserS } from "../services/auth.service"
 
 
 export const registerUserC=async(req:Request,res:Response)=>{
@@ -12,5 +12,14 @@ export const registerUserC=async(req:Request,res:Response)=>{
         console.log(e)
         return res.status(400).json({sucess:false,message:e.message})
         
+    }
+}
+
+export const loginC=async(req:Request, res:Response)=>{
+    try{
+        return res.status(200).json(await loginUserS(req.body))
+    }
+    catch(e: any){
+        return res.status(405).json({sucess:false,message:e.message})
     }
 }
