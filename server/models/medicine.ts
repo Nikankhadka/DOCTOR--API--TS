@@ -1,3 +1,4 @@
+import { string } from "joi";
 import { Schema,model,Types } from "mongoose";
 import { IMedicine } from "../interface/Dbinterface";
 
@@ -9,15 +10,8 @@ const medicineSchema = new Schema({
   },
   brand: [
     {
-      brandName: {
-        type: String,
-        required: true,
-      },
-      company: {
-        type: String,
-        required: true,
-      },
-      dose: {
+      brand:{type:Types.ObjectId,ref:"Brand"},
+      brandDose: {
         type: String,
         required: true,
       },
@@ -79,4 +73,6 @@ const medicineSchema = new Schema({
   },
 });
 
-export default model<IMedicine>("Medicine", medicineSchema);
+const medicineModel= model<IMedicine>("Medicine", medicineSchema);
+
+export default medicineModel;
