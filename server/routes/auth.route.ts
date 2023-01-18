@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { registerUserC } from "../controllers/auth.controller";
-import { validateRegister } from "../middlewares/inputValidation";
+
+import { loginC, registerUserC } from "../controllers/auth.controller";
+import { validateInput } from "../middlewares/inputValidation";
 const router = Router();
 
 
-router.post("/registerUser",validateRegister,registerUserC)
+router.post("/registerUser",validateInput,registerUserC)
+router.post("/login",loginC)
 
-//
 
 
 

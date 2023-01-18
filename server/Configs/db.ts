@@ -1,5 +1,3 @@
-
-
 import {connect} from "mongoose"
 import {Request,Response,NextFunction} from "express"
 import * as dotenv from "dotenv"
