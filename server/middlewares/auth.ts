@@ -1,18 +1,37 @@
-import { NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { NextFunction,Request,Response} from 'express';
+import {verify} from 'jsonwebtoken';
+import { verifyAccessTokenS } from '../services/auth.service';
+
+declare module "express-serve-static-core" {
+    interface Request {
+      user:{
+        email:string
+      } }}
 
 
-export const authVerification = async (req:Request, res:Response, next:NextFunction) => {
-    const{ authorization } = req.headers;
-    if (!authorization) return res.status(401).json({ error: 'You must be logged in' });
-    const token = authorization.replace('Bearer ', '');
-    jwt.verify(token, 'test', async (err, payload) => {
-        if (err) return res.status(401).json({ error: 'You must be logged in' });
-        const { id } = payload;
-        const user = await User.findById(id);
-        req.user = user;
-        next();
-    }
-    )
+
+
+
+
+
+
+
+export const verifyaccessToken=async(req:Request,res:Response,next:NextFunction)=>{
+  
+    if(!req.headers.authorization) return res.status(401).json({success:false,message:"bearer token not found"});
+    const token = req.headers.authorization.replace('Bearer ', '');
+
+    try{
+    const verifiedtoken=await verifyAccessTokenS(token);
+    console.log("token sucessfully verified")
+    req.user=verifiedtoken;
+    next()
+      
+
+}catch(e){
+    console.log(e)
+    return res.status(401).json({success:false,message:"invalid request credential"})
+}
+
 }
 

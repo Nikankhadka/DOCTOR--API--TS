@@ -5,6 +5,15 @@ import * as dotenv from "dotenv"
 import { type } from "os"
 import {sign} from "jsonwebtoken"
 
+
+
+declare module 'jsonwebtoken' {
+    export interface JwtPayload {
+       email: string,
+   }
+}
+import * as jwt from "jsonwebtoken"
+
 dotenv.config()
 
 export const registerUserS=async(inputData:userInput):Promise<boolean>=>{
@@ -33,13 +42,14 @@ export const registerUserS=async(inputData:userInput):Promise<boolean>=>{
 }
 
 export const loginUserS=async(loginDto:LoginDto):Promise<LoginResponse> => {
+    try{
         const user = await userModel.findOne({email: loginDto.email});
         if(!user) {
             throw new Error("User does not exists");
         }
         if( await compare(loginDto.password, user.password) )
         {
-            const token = sign({id: user._id}, "test", {expiresIn: '1d'});
+            const token = sign({email:loginDto.email },process.env.tokenSecret!, {expiresIn: '1d'});
             return {
                 token,
                 user: {
@@ -52,8 +62,28 @@ export const loginUserS=async(loginDto:LoginDto):Promise<LoginResponse> => {
             };
         } else {
             throw new Error("Invalid Credentials")
-        }
+        }  
+    }catch(e){
+        console.log(e)
+        throw e;
     }
+       
+    }
+
+
+
+export const verifyAccessTokenS=async(token:string):Promise<{email:string}>=>{
+    try{
+       const {email}=await <jwt.JwtPayload>jwt.verify(token,process.env.tokenSecret!)
+        const isValid=await userModel.findOne({email});
+        if(!isValid) throw new Error("invalid token data")
+        return {email}
+    }catch(e){
+        console.log(e)
+        throw e;
+    }
+}
+
 
 
 export type LoginDto = {
