@@ -1,5 +1,5 @@
 import { Request,Response } from "express"
-import { loginUserS, registerUserS } from "../services/auth.service"
+import { InvalidCredentialsError, loginUserS, NotFoundError, registerUserS } from "../services/auth.service"
 
 
 export const registerUserC=async(req:Request,res:Response)=>{
@@ -20,6 +20,10 @@ export const loginC=async(req:Request, res:Response)=>{
         return res.status(200).json(await loginUserS(req.body))
     }
     catch(e: any){
-        return res.status(405).json({sucess:false,message:e.message})
+        if(e instanceof NotFoundError) return res.status(404).json({sucess:false,message:e.message})
+        else if(e instanceof InvalidCredentialsError) return res.status(401).json({sucess:false,message:e.message})
+        else return res.status(500).json({sucess:false,message:e.message})
     }
 }
+
+

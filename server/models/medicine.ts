@@ -76,3 +76,5 @@ const medicineSchema = new Schema({
 const medicineModel= model<IMedicine>("Medicine", medicineSchema);
 
 export default medicineModel;
+
+
