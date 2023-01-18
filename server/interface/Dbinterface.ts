@@ -13,10 +13,7 @@ import {Types} from "mongoose"
     brandName:string,
     company:string
     description:string
-    medicine: {
-        type: Types.ObjectId,
-        ref: 'Medicine'
-    }
+   
 }
 
 
@@ -35,9 +32,8 @@ import {Types} from "mongoose"
 
 interface brandData{
     _id:string,
-    brandName:string,
-    company:string,
-    dose:string,
+    brand:string,
+    brandDose:string,
     formulation:string,
 }
 

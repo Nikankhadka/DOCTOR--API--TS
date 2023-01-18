@@ -15,7 +15,7 @@ import dbConnect from "./Configs/db"
 
 //importing routes
 import authRoute from "./routes/auth.route"
-import brandRoute from "./routes/brand.route"
+import brandRoute from "./routes/medicine.route"
 
   
 

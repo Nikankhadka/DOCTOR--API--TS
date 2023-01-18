@@ -14,10 +14,7 @@ const brandSchema = new Schema({
         type: String,
         required: true
    },
-    medicine: {
-        type:Types.ObjectId,
-        ref: 'Medicine'
-    }
+
 
 })
 
