@@ -31,6 +31,7 @@ export const registerUserS=async(inputData:userInput):Promise<boolean>=>{
         
     }
 }
+
 export const loginUserS=async(loginDto:LoginDto):Promise<LoginResponse> => {
         const user = await userModel.findOne({email: loginDto.email});
         if(!user) {
@@ -73,3 +74,4 @@ type User = {
     phoneNumber:string;
     email:string
 }
+
