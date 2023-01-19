@@ -1,11 +1,12 @@
 
 import { Router } from "express";
-import { createBrand } from "../controllers/medicine.controller";
+import { createMedicineC } from "../controllers/medicine.controller";
 import { verifyaccessToken } from "../middlewares/auth";
+import { validateMedicine } from "../middlewares/inputValidation";
 const router=Router();
 
 
-router.post("/createMedicine",verifyaccessToken,createBrand)
+router.post("/createMedicine",validateMedicine,createMedicineC)
 
 
 export default router;
