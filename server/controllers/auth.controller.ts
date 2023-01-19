@@ -20,6 +20,6 @@ export const loginC=async(req:Request, res:Response)=>{
         return res.status(200).json(await loginUserS(req.body))
     }
     catch(e: any){
-        return res.status(405).json({sucess:false,message:e.message})
+        return res.status(405).json({success:false,message:e.message})
     }
 }

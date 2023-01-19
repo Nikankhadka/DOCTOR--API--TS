@@ -25,3 +25,43 @@ export const validateRegister=async(req:Request,res:Response,next:NextFunction)=
         return res.status(400).json(err)
     }
 }
+
+export const validateMedicine=async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const brandSchema=joi.object({
+            brandDose:joi.string().required(),
+            formulation:joi.string().required()
+        })  
+        const basicSchema=joi.object({
+            usagePharmacologicCategory:joi.string().required(),
+            adultDosing:joi.string().required(),
+            pediatricsDosing:joi.string().required(),
+            renalAdjustedDosing:joi.string().required(),
+            hepaticDosing:joi.string().required(),
+            administration:joi.string().required(),
+            pregnancyRiskFactor:joi.string().required(),
+            breastfeedingConsiderations:joi.string().required(),
+            contradication:joi.string().required(),
+            adverseEffects:joi.string().required(),
+            pharmacology:joi.string().required(),
+            drugInteractions:joi.string().required(),
+            
+        })  
+        const medicineSchema=joi.object({
+                genericName:joi.string().required(),
+                brand:joi.array().items(brandSchema),
+                basic:joi.array().items(basicSchema)
+            })
+        const{error,value}=await medicineSchema.validate(req.body,{abortEarly:false})
+        if(error){
+            console.log(error.details)
+            return res.status(400).json({success:false,message:error.message})
+        }
+        console.log(value)
+        next()
+    }catch(err){
+        return res.status(400).json(err)
+    }
+
+        }
+    
