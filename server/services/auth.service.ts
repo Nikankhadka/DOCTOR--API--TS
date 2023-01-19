@@ -42,26 +42,29 @@ export const registerUserS = async (inputData: userInput): Promise<boolean> => {
 }
 
 export const loginUserS = async (loginDto: LoginDto): Promise<LoginResponse> => {
-
-    const user = await userModel.findOne({ email: loginDto.email });
-    if (!user) {
-        throw new NotFoundError("User Not Found")
+    try{
+        const user = await userModel.findOne({ email: loginDto.email });
+        if (!user) {
+            throw new Error("User Not Found")
+        }
+        if (await compare(loginDto.password, user.password)) {
+            const token = sign({ email: user.email }, process.env.tokenSecret!, { expiresIn: '1d' });
+            return {
+                token,
+                user: {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    phoneNumber: user.phoneNumber,
+                    email: user.email
+                }
+            };
+        } else {
+            throw new Error("Invalid Credentials")
+        }
     }
-    if (await compare(loginDto.password, user.password)) {
-        const token = sign({ email: user.email }, process.env.tokenSecret!, { expiresIn: '1d' });
-        return {
-            token,
-            user: {
-                id: user._id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                phoneNumber: user.phoneNumber,
-                email: user.email
-            }
-        };
-    } else {
-        throw new InvalidCredentialsError("Invalid Credentials")
-    }
+   catch(e){
+     throw e;
+   }
 
 
 }
@@ -94,7 +97,7 @@ export type LoginResponse = {
 }
 
 type User = {
-    id: string;
+   
     firstName: string;
     lastName: string;
     phoneNumber: string;
@@ -102,19 +105,5 @@ type User = {
 }
 
 
-export class NotFoundError extends Error{
-    public status:number=404;
-    constructor(message:string){
-        super(message);
-        this.name="NotFoundError"
-    }
-}
 
-export class InvalidCredentialsError extends Error{
-    public status:number=401;
-    constructor(message:string){
-        super(message);
-        this.name="InvalidCredentialsError"
-    }
-}
 

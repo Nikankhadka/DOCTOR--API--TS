@@ -1,7 +1,6 @@
 import {Types} from "mongoose"
 //interface/type for user schema in db 
  export interface IUser{
-    _id:string,
     firstName:string,
     lastName:string,
     phoneNumber:string,
@@ -31,13 +30,12 @@ import {Types} from "mongoose"
 
 
 interface brandData{
-    _id:string,
-    brand:string,
+    brand:Types.ObjectId,
     brandDose:string,
     formulation:string,
 }
 
-interface basicData{
+export interface basicData{
     _id:string,
     usagePharmacologicCategory:string,
     adultDosing: string,

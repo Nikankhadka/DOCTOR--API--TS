@@ -29,6 +29,7 @@ export const validateRegister=async(req:Request,res:Response,next:NextFunction)=
 export const validateMedicine=async(req:Request,res:Response,next:NextFunction)=>{
     try{
         const brandSchema=joi.object({
+            brand:joi.string().required(),
             brandDose:joi.string().required(),
             formulation:joi.string().required()
         })  
@@ -50,7 +51,7 @@ export const validateMedicine=async(req:Request,res:Response,next:NextFunction)=
         const medicineSchema=joi.object({
                 genericName:joi.string().required(),
                 brand:joi.array().items(brandSchema),
-                basic:joi.array().items(basicSchema)
+                basic:basicSchema,
             })
         const{error,value}=await medicineSchema.validate(req.body,{abortEarly:false})
         if(error){
@@ -63,5 +64,5 @@ export const validateMedicine=async(req:Request,res:Response,next:NextFunction)=
         return res.status(400).json(err)
     }
 
-        }
+}
     

@@ -1,3 +1,5 @@
+import { basicData } from "./Dbinterface"
+
 export interface userInput{
     
     firstName:string,
@@ -7,71 +9,19 @@ export interface userInput{
     password: string
  }
 
- export interface medicineInput{
-    genericName: {
-        type: String,
-        
-      },
-      brand: 
-        {
-        
-          brandDose: {
-            type: String,
-            
-          },
-          formulation: {
-            type: String,
-           
-        },
-    
-      basic: {
-        usagePharmacologicCategory: {
-          type: String
-        },
-        adultDosing: {
-          type: String
-         
-        },
-        pediatricsDosing: {
-          type: String
-          
-        },
-        renalAdjustedDosing: {
-          type: String
-          
-        },
-        hepaticDosing: {
-          type: String
-         
-        },
-        administration: {
-          type: String
-          
-        },
-        pregnancyRiskFactor: {
-          type: String
-          
-        },
-        breastfeedingConsiderations: {
-          type: String
-          
-        },
-        contradication: {
-          type: String
-          
-        },
-        adverseEffects: {
-          type: String
-         
-        },
-        pharmacology: {
-          type: String
-          
-        },
-        drugInteractions: {
-          type: String
-          
-        },
-      },
+
+
+ interface brandData{
+    brandName:string,
+    company:string,
+    description:string,
+    brandDose:string,
+    formulation:string,
  }
-};
+ 
+ export interface MedicineInput{
+    genericName:string,
+    brand:brandData[],
+    basic:basicData
+
+ }

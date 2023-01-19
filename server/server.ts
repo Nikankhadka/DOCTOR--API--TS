@@ -15,7 +15,7 @@ import dbConnect from "./Configs/db"
 
 //importing routes
 import authRoute from "./routes/auth.route"
-import brandRoute from "./routes/medicine.route"
+import medicineRoute from "./routes/medicine.route"
 
   
 
@@ -45,7 +45,7 @@ dbConnect()
 //route registration to the application
 
 app.use("/auth/v1",authRoute)
-app.use("/brand/v1",brandRoute)
+app.use("/medicine/v1",medicineRoute)
 
 
 

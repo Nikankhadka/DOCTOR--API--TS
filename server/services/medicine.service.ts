@@ -1,24 +1,65 @@
 import medicine from '../models/medicine';
 import { Request, Response } from 'express';
-import { medicineInput } from "../interface/input";
+import { IMedicine } from '../interface/Dbinterface';
+import { MedicineInput } from '../interface/input';
+import { brandModel } from '../models/brand';
+import userModel from '../models/user';
+import medicineModel from '../models/medicine';
 
-export const createMedicineS = async(inputData:medicineInput,):Promise<boolean> =>{
-    try{
-        const {genericName,brand}=inputData
-        const medicineExist=await medicine.findOne({genericName,brand});
-        if(medicineExist) throw new Error("Medicine Already Exist ");
-        
-        //else
-        const newMedicine=await medicine.create({
-            genericName,
-            brand
-        })
-        await newMedicine.save();
-        return true;
 
-    }catch(e){
-        console.log(e)
-        throw e;
-        
-    }
+export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean> =>{
+   try{
+    const{genericName,brand,basic}=medicineData;
+    //create brand by looping through brand array for each information 
+
+    const medicineExist=await medicineModel.findOne({genericName});
+    if(medicineExist) throw new Error("Medicine already exist");
+
+    //cratea medicine 
+    const newMedicine=await medicineModel.create({
+      genericName,
+      brand:[],
+      basic
+    })
+    //just loop though the provided brnad data and add into above docs
+    brand.forEach(async(brandinfo)=>{
+      const brandExist=await brandModel.findOne({brandName:brandinfo.brandName})
+      if(brandExist){
+         //just update the mdeicine with brand information 
+         newMedicine.brand.push({
+            brand:brandExist._id,
+            brandDose:brandinfo.brandDose,
+            formulation:brandinfo.formulation,
+         })
+         return;
+         
+      }
+
+      console.log("return bina else ma jado rahexa")
+      //since brand does not exist post brand and push brand info
+      const newBrand=await brandModel.create({
+         brandName:brandinfo.brandName,
+         company:brandinfo.company,
+         description:brandinfo.description
+      })
+      
+      //push brand info into medicine doc
+      newMedicine.brand.push({
+         brand:newBrand._id,
+         brandDose:brandinfo.brandDose,
+         formulation:brandinfo.formulation,
+      })
+
+
+    })
+
+    //since everything is done 
+    return true;
+    
+
+
+   }catch(e){
+    console.log(e);
+    throw e;
+   }
 }

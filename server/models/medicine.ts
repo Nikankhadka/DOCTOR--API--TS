@@ -13,13 +13,13 @@ const medicineSchema = new Schema({
       brand:{type:Types.ObjectId,ref:"Brand"},
       brandDose: {
         type: String,
-        required: true,
+        
       },
       formulation: {
         type: String,
-        required: true,
+       
       },
-    },
+    }
   ],
   basic: {
     usagePharmacologicCategory: {

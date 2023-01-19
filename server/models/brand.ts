@@ -18,4 +18,4 @@ const brandSchema = new Schema({
 
 })
 
-export default model <IBrand>('Brand', brandSchema);
+export const brandModel=model<IBrand>('Brand', brandSchema);
