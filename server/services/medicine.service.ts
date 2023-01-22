@@ -15,6 +15,7 @@ export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean
     const medicineExist=await medicineModel.findOne({genericName});
     if(medicineExist) throw new Error("Medicine already exist");
 
+    
     //cratea medicine 
     const newMedicine=await medicineModel.create({
       genericName,
@@ -56,10 +57,21 @@ export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean
     //since everything is done 
     return true;
     
-
-
    }catch(e){
     console.log(e);
     throw e;
+   }
+}
+
+export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
+   try{
+      const medicine=await medicineModel.findOne({_id:id})
+      console.log(medicine)
+      if(!medicine) throw new Error("Invalid Medicine Id")
+       
+      return medicine;
+   }catch(e){
+      console.log(e)
+      throw e;
    }
 }
