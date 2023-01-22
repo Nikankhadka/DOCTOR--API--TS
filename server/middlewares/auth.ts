@@ -26,8 +26,7 @@ export const verifyaccessToken=async(req:Request,res:Response,next:NextFunction)
     const verifiedtoken=await verifyAccessTokenS(token);
     console.log("token sucessfully verified")
     req.user=verifiedtoken;
-    next()
-      
+    next()   
 
 }catch(e){
     console.log(e)
