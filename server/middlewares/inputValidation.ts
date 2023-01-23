@@ -29,7 +29,9 @@ export const validateRegister=async(req:Request,res:Response,next:NextFunction)=
 export const validateMedicine=async(req:Request,res:Response,next:NextFunction)=>{
     try{
         const brandSchema=joi.object({
-            brand:joi.string().required(),
+            brandName:joi.string().required(),
+            company :joi.string().required(),
+            description:joi.string().required(),
             brandDose:joi.string().required(),
             formulation:joi.string().required()
         })  

@@ -4,6 +4,7 @@ import { createMedicineS, getMedicineByIdS } from "../services/medicine.service"
 
 export const createMedicineC=async(req:Request,res:Response,next:NextFunction)=>{
     try{
+        console.log(req.body)
         const newMedicine=await createMedicineS(req.body)
         if(newMedicine) return res.status(200).json({success:true,message:`Medicine sucessfully created`,medicine:req.body})
     }catch(e:any){
