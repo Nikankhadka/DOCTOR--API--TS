@@ -72,12 +72,19 @@ export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
       //this helps to define the type that is going to be returned
       const medicine= await medicineModel.findOne({_id:id}).populate("brand.brand")
      console.log(medicine)
-      
       if(!medicine) throw new Error("Invalid Medicine Id")
        
       return medicine;
    }catch(e){
       console.log(e)
       throw e;
+   }
+}
+
+export const updateMedicineByIdS=async(id:string,newData:IMedicine)=>{
+   try{
+
+   }catch(e){
+      console.log(e)
    }
 }
