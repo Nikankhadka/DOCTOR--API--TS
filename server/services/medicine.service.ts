@@ -5,6 +5,7 @@ import { MedicineInput } from '../interface/input';
 import { brandModel } from '../models/brand';
 import userModel from '../models/user';
 import medicineModel from '../models/medicine';
+import { json } from 'stream/consumers';
 
 
 export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean> =>{
@@ -32,6 +33,7 @@ export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean
             brandDose:brandinfo.brandDose,
             formulation:brandinfo.formulation,
          })
+         newMedicine.save()
          return;
          
       }
@@ -50,6 +52,7 @@ export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean
          brandDose:brandinfo.brandDose,
          formulation:brandinfo.formulation,
       })
+      newMedicine.save()
 
 
     })
@@ -65,8 +68,11 @@ export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean
 
 export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
    try{
-      const medicine=await medicineModel.findOne({_id:id})
-      console.log(medicine)
+
+      //this helps to define the type that is going to be returned
+      const medicine= await medicineModel.findOne({_id:id}).populate("brand.brand")
+     console.log(medicine)
+      
       if(!medicine) throw new Error("Invalid Medicine Id")
        
       return medicine;

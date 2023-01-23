@@ -48,7 +48,7 @@ export const loginUserS = async (loginDto: LoginDto): Promise<LoginResponse> => 
             throw new Error("User Not Found")
         }
         if (await compare(loginDto.password, user.password)) {
-            const token = sign({ email: user.email }, process.env.tokenSecret!, { expiresIn: '1d' });
+            const token = sign({ email: user.email },"hello", { expiresIn: "2 days" });
             return {
                 token,
                 user: {
@@ -73,7 +73,8 @@ export const loginUserS = async (loginDto: LoginDto): Promise<LoginResponse> => 
 
 export const verifyAccessTokenS = async (token: string): Promise<{ email: string }> => {
     try {
-        const { email } = await <jwt.JwtPayload>jwt.verify(token, process.env.tokenSecret!)
+        console.log(token)
+        const { email } = await <jwt.JwtPayload>jwt.verify(token,"hello")
         const isValid = await userModel.findOne({ email });
         if (!isValid) throw new Error("invalid token data")
         return { email }

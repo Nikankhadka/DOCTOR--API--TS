@@ -1,3 +1,4 @@
+
 import {Types} from "mongoose"
 //interface/type for user schema in db 
  export interface IUser{
@@ -30,7 +31,11 @@ import {Types} from "mongoose"
 
 
 interface brandData{
-    brand:Types.ObjectId,
+    brand:Types.ObjectId|{
+        brandName:string,
+        company:string,
+        description:string
+    },
     brandDose:string,
     formulation:string,
 }
