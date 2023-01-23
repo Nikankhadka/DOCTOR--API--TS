@@ -29,12 +29,12 @@ export const validateRegister=async(req:Request,res:Response,next:NextFunction)=
 export const validateLogin=async(req:Request,res:Response,next:NextFunction)=>{
     try{
       
-        const registerSchema=joi.object({
+        const loginSchema=joi.object({
             email: joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
             password:joi.string().required(),
         })
 
-        const{error,value}=await registerSchema.validate(req.body,{abortEarly:false})
+        const{error,value}=await loginSchema.validate(req.body,{abortEarly:false})
         if(error){
             console.log(error.details)
             return res.status(400).json({success:false,message:error.message})
