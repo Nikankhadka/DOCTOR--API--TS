@@ -81,9 +81,12 @@ export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
    }
 }
 
-export const updateMedicineByIdS=async(id:string,newData:IMedicine)=>{
-   try{
-
+export const updateMedicineByIdS=async(id:string,newData:Partial<IMedicine>)=>{
+   try{  
+      //check if brand is needed to be updated
+   
+      const updatedMedicine=await medicineModel.findOneAndUpdate({_id:id},newData,{new:true})
+      
    }catch(e){
       console.log(e)
    }
