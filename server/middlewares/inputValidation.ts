@@ -9,11 +9,32 @@ export const validateRegister=async(req:Request,res:Response,next:NextFunction)=
             firstName:joi.string().required(),
             lastName:joi.string().required(),
             phoneNumber:joi.string().required(),
-            email:joi.string().required(),
+            email: joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
             password:joi.string().required(),
         })
 
         const{error,value}=await registerSchema.validate(req.body,{abortEarly:false})
+        if(error){
+            console.log(error.details)
+            return res.status(400).json({success:false,message:error.message})
+        }
+        console.log(value)
+        next()
+
+    }catch(err){
+        return res.status(400).json(err)
+    }
+}
+
+export const validateLogin=async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+      
+        const loginSchema=joi.object({
+            email: joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
+            password:joi.string().required(),
+        })
+
+        const{error,value}=await loginSchema.validate(req.body,{abortEarly:false})
         if(error){
             console.log(error.details)
             return res.status(400).json({success:false,message:error.message})
