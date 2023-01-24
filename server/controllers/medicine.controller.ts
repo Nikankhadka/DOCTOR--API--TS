@@ -27,7 +27,7 @@ export const updateMedicinbyIdC=async(req:Request,res:Response)=>{
     try{
         console.log(req.body)
         const UpdatedMedicine=await updateMedicineByIdS(req.params.id,req.body)
-
+        if(UpdatedMedicine) return res.status(200).json({success:true,UpdatedMedicine})
     }catch(e:any){
         console.log(e)
         res.status(404).json({success:false,err:e.message})

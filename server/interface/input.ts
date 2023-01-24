@@ -1,3 +1,4 @@
+import { Types } from "mongoose"
 import { basicData } from "./Dbinterface"
 
 export interface userInput{
@@ -12,9 +13,10 @@ export interface userInput{
 
 
  interface brandData{
-    brandName:string,
-    company:string,
-    description:string,
+   brand?:Types.ObjectId,
+    brandName?:string,
+    company?:string,
+    description?:string,
     brandDose:string,
     formulation:string,
  }
