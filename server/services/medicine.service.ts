@@ -83,31 +83,36 @@ export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
 
 export const updateMedicineByIdS=async(id:string,newData:Partial<MedicineInput>):Promise<IMedicine>=>{
    try{  
-      //check if brand is needed to be updated
+      
       if(newData.brand){
-         //loop through and check 
-         newData.brand.forEach(async(brandInfo)=>{
-            //just check the name that is passed in input to update the brand information 
+         
+        const promises= newData.brand.map(async(brandInfo)=>{
+            
             const brandExist= await brandModel.findOne({brandName:brandInfo.brandName})
             if(brandExist){
+               console.log("brandExist")
               brandInfo.brand=brandExist._id;
                delete brandInfo.brandName;
                delete brandInfo.company;
                delete brandInfo.description;  
+               console.log(brandInfo)
                return    
             }
-            //if brand does not exist add new brand information and ref it in to the medicine 
+           
             const newBrand=await brandModel.create({
                brandName:brandInfo.brandName,
                company:brandInfo.company,
                description:brandInfo.description
             })
-            newBrand.save();
+           
             brandInfo.brand=newBrand._id;
-            return
+           await newBrand.save();
+           console.log("this is modified newdata",brandInfo)
          })
+
+         await Promise.all(promises)
       }
-      const updatedMedicine=await medicineModel.findOneAndUpdate({_id:id},newData,{new:true}).populate("brand.brand");
+      const updatedMedicine=await medicineModel.findOneAndUpdate({_id:id},{...newData},{new:true}).populate("brand.brand");
       if(!updatedMedicine) throw new Error("medicine Update failed")
       return updatedMedicine;
       
