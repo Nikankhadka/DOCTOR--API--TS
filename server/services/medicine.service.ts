@@ -117,3 +117,14 @@ export const updateMedicineByIdS=async(id:string,newData:Partial<MedicineInput>)
       
    }
 }
+//delete medicine
+ export const deleteMedicineS=async(id:string):Promise<boolean>=>{
+   try{
+      const deletedMedicine=await medicineModel.findOneAndDelete({_id:id});
+      if(!deletedMedicine) throw new Error("Medicine delete failed")
+      return true;
+   }catch(e){
+      console.log(e)
+      throw e;
+   }
+}
