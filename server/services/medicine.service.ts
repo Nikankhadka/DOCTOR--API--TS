@@ -17,54 +17,46 @@ export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean
     if(medicineExist) throw new Error("Medicine already exist");
 
     
-    //cratea medicine 
-    const newMedicine=await medicineModel.create({
-      genericName,
-      brand:[],
-      basic
-    })
-    //just loop though the provided brnad data and add into above docs
-    brand.forEach(async(brandinfo)=>{
-      const brandExist=await brandModel.findOne({brandName:brandinfo.brandName})
-      if(brandExist){
-         //just update the mdeicine with brand information 
-         newMedicine.brand.push({
-            brand:brandExist._id,
-            brandDose:brandinfo.brandDose,
-            formulation:brandinfo.formulation,
+   const promises=brand.map(async(brandinfo)=>{
+
+   const brandExist= await brandModel.findOne({brandName:brandinfo.brandName})     
+      if(brandExist){   
+            brandinfo.brand=brandExist._id,
+            delete brandinfo.brandName
+            delete brandinfo.company
+            delete brandinfo.description
+            return;
+         }
+   //else create new brand number
+         const newBrand=await brandModel.create({
+            brandName:brandinfo.brandName,
+            company:brandinfo.company,
+            description:brandinfo.description
          })
-         newMedicine.save()
-         return;
-         
-      }
+         await newBrand.save();
+         brandinfo.brand=newBrand._id;
+         delete brandinfo.brandName
+            delete brandinfo.company
+            delete brandinfo.description
+ })
+      await Promise.all(promises)
 
-      console.log("return bina else ma jado rahexa")
-      //since brand does not exist post brand and push brand info
-      const newBrand=await brandModel.create({
-         brandName:brandinfo.brandName,
-         company:brandinfo.company,
-         description:brandinfo.description
+      //now create medicine 
+      const newMedicine=await medicineModel.create({
+         genericName,
+         brand,
+         basic
       })
-      
-      //push brand info into medicine doc
-      newMedicine.brand.push({
-         brand:newBrand._id,
-         brandDose:brandinfo.brandDose,
-         formulation:brandinfo.formulation,
-      })
-      newMedicine.save()
-
-
-    })
-
-    //since everything is done 
-    return true;
+      await newMedicine.save();
+       return true;
     
    }catch(e){
     console.log(e);
     throw e;
    }
 }
+
+
 
 export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
    try{
@@ -104,9 +96,11 @@ export const updateMedicineByIdS=async(id:string,newData:Partial<MedicineInput>)
                company:brandInfo.company,
                description:brandInfo.description
             })
-           
+            await newBrand.save();
             brandInfo.brand=newBrand._id;
-           await newBrand.save();
+           delete brandInfo.brandName;
+           delete brandInfo.company;
+           delete brandInfo.description;
            console.log("this is modified newdata",brandInfo)
          })
 
