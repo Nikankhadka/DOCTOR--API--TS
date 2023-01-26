@@ -11,9 +11,9 @@ import {Types} from "mongoose"
 
  export interface IBrand{
     brandName:string,
-    company:string
-    description:string
-   
+    company:string,
+    description:string,
+    medicineCount:number
 }
 
 

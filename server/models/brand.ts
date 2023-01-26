@@ -14,6 +14,7 @@ const brandSchema = new Schema({
         type: String,
         required: true
    },
+   medicineCount:Number
 
 
 })

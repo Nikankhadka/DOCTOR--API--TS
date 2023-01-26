@@ -14,6 +14,7 @@ export interface userInput{
 
  interface brandData{
    brand?:Types.ObjectId,
+   Delete:boolean,
     brandName?:string,
     company?:string,
     description?:string,
