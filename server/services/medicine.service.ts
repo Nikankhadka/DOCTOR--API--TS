@@ -57,6 +57,18 @@ export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean
 }
 
 
+export const getAllMedicineS=async():Promise<IMedicine[]>=>{
+   try{
+      const allMedicine=await medicineModel.find({},'_id genericName');
+      console.log(allMedicine);
+      if(!allMedicine) throw new Error("Medicine data failed to fetch")
+      return allMedicine;
+
+   }catch(e){
+      throw e;
+   }
+
+}
 
 export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
    try{
@@ -72,6 +84,8 @@ export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
       throw e;
    }
 }
+
+
 
 export const updateMedicineByIdS=async(id:string,newData:Partial<MedicineInput>):Promise<IMedicine>=>{
    try{  
@@ -116,7 +130,10 @@ export const updateMedicineByIdS=async(id:string,newData:Partial<MedicineInput>)
       
    }
 }
-//delete medicine
+
+
+
+
  export const deleteMedicineS=async(id:string):Promise<boolean>=>{
    try{
       const deletedMedicine=await medicineModel.findOneAndDelete({_id:id});
