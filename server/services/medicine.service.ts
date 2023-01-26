@@ -1,14 +1,12 @@
-import medicine from '../models/medicine';
-import { Request, Response } from 'express';
+
 import { IMedicine } from '../interface/Dbinterface';
 import { MedicineInput } from '../interface/input';
 import { brandModel } from '../models/brand';
-import userModel from '../models/user';
 import medicineModel from '../models/medicine';
-import { json } from 'stream/consumers';
 
 
-export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean> =>{
+
+export const createMedicineS = async(medicineData:MedicineInput):Promise<IMedicine> =>{
    try{
     const{genericName,brand,basic}=medicineData;
     //create brand by looping through brand array for each information 
@@ -21,24 +19,27 @@ export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean
 
    const brandExist= await brandModel.findOne({brandName:brandinfo.brandName})     
       if(brandExist){   
-            brandinfo.brand=brandExist._id,
-            delete brandinfo.brandName
-            delete brandinfo.company
-            delete brandinfo.description
+            //add +1 in brands Medicine Count
+            brandExist.medicineCount=+1
+            await brandExist.save()
+
+            //just modofy the incoming brand input
+            brandinfo.brand=brandExist._id
             return;
          }
-   //else create new brand number
+      //else create new brand number
          const newBrand=await brandModel.create({
             brandName:brandinfo.brandName,
             company:brandinfo.company,
-            description:brandinfo.description
+            description:brandinfo.description,
+            medicineCount:1,
          })
+
          await newBrand.save();
          brandinfo.brand=newBrand._id;
-         delete brandinfo.brandName
-            delete brandinfo.company
-            delete brandinfo.description
- })
+    })
+
+      //resolve all the promises
       await Promise.all(promises)
 
       //now create medicine 
@@ -47,8 +48,8 @@ export const createMedicineS = async(medicineData:MedicineInput):Promise<boolean
          brand,
          basic
       })
-      await newMedicine.save();
-       return true;
+    await newMedicine.save();
+   return newMedicine;
     
    }catch(e){
     console.log(e);
@@ -94,33 +95,37 @@ export const updateMedicineByIdS=async(id:string,newData:Partial<MedicineInput>)
          
         const promises= newData.brand.map(async(brandInfo)=>{
             
-            const brandExist= await brandModel.findOne({brandName:brandInfo.brandName})
-            if(brandExist){
-               console.log("brandExist")
-              brandInfo.brand=brandExist._id;
-               delete brandInfo.brandName;
-               delete brandInfo.company;
-               delete brandInfo.description;  
-               console.log(brandInfo)
-               return    
+         
+         //check for brand deletion
+
+         if(brandInfo.Delete){
+            //deacrease mdeicine count for that brand
+            const brand= await brandModel.findOneAndUpdate({_id:brandInfo.brand},{$inc:{'medicineCount':-1}}).exec();
+            return;
             }
+
+         const brandExist= await brandModel.findOne({brandName:brandInfo.brandName})
+         if(brandExist){
+            brandInfo.brand=brandExist._id;
+            return    
+         }
            
-            const newBrand=await brandModel.create({
+         const newBrand=await brandModel.create({
                brandName:brandInfo.brandName,
                company:brandInfo.company,
                description:brandInfo.description
             })
-            await newBrand.save();
-            brandInfo.brand=newBrand._id;
-           delete brandInfo.brandName;
-           delete brandInfo.company;
-           delete brandInfo.description;
-           console.log("this is modified newdata",brandInfo)
+         await newBrand.save();
+         brandInfo.brand=newBrand._id;
          })
+
 
          await Promise.all(promises)
       }
-      const updatedMedicine=await medicineModel.findOneAndUpdate({_id:id},{...newData},{new:true}).populate("brand.brand");
+
+
+      await medicineModel.findOneAndUpdate({_id:id},{...newData},{new:true})
+      const updatedMedicine=await medicineModel.findOneAndUpdate({_id:id},{$pull:{brand:{Delete:true}}},{new:true}) 
       if(!updatedMedicine) throw new Error("medicine Update failed")
       return updatedMedicine;
       
