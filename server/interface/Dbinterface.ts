@@ -13,7 +13,7 @@ import {Types} from "mongoose"
     brandName:string,
     company:string,
     description:string,
-    medicineCount:number
+    medicineCount?:number
 }
 
 
