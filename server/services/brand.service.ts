@@ -34,3 +34,14 @@ export const getAllBrandS=async():Promise<IBrand[]>=>{
         throw e;
     }
 }
+
+export const getBrandByIdS=async(id:string):Promise<IBrand>=>{
+    try{
+        const brandData=await brandModel.findOne({_id:id});
+        if(!brandData) throw new Error("Invalid Brand Id")
+        return brandData;
+    }catch(e){
+        console.log(e)
+        throw e;
+    }
+}

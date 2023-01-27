@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createBrandC, getAllBrandC } from "../controllers/brand.controllers";
+import { createBrandC, getAllBrandC, getBrandByIdC } from "../controllers/brand.controllers";
 import { verifyAccessToken } from "../middlewares/auth";
 import { validateBrand } from "../middlewares/inputValidation";
 
@@ -7,7 +7,7 @@ import { validateBrand } from "../middlewares/inputValidation";
 const router=Router();
 
 router.get("/getBrand",getAllBrandC)
-
+router.get("/getBrand/:id",getBrandByIdC)
 
 //this middle ware function will not be applied for above route only after routes
 router.use(verifyAccessToken)
