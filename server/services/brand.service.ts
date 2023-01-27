@@ -1,4 +1,4 @@
-import {IBrand} from "../interface/Dbinterface"
+import {IBrand, IMedicine} from "../interface/Dbinterface"
 import { brandModel } from "../models/brand"
 
 export const createBrandS=async(brandData:IBrand)=>{
@@ -40,6 +40,21 @@ export const getBrandByIdS=async(id:string):Promise<IBrand>=>{
         const brandData=await brandModel.findOne({_id:id});
         if(!brandData) throw new Error("Invalid Brand Id")
         return brandData;
+    }catch(e){
+        console.log(e)
+        throw e;
+    }
+}
+
+export const updateBrandS=async(id:string,brandData:Partial<IBrand>):Promise<IBrand>=>{
+    try{
+        const brandExist=await brandModel.findOne({_id:id});
+        if(!brandExist) throw new Error("Invalid Brand Id")
+        
+        //now just update the brand with provided information
+        const updatedBrand=await brandModel.findOneAndUpdate({_id:id},{...brandData},{new:true})
+         if(!updatedBrand) throw new Error("medicine update failed")
+         return updatedBrand
     }catch(e){
         console.log(e)
         throw e;

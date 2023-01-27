@@ -1,5 +1,5 @@
 import { Request,Response } from "express"
-import { createBrandS,getAllBrandS, getBrandByIdS} from "../services/brand.service"
+import { createBrandS,getAllBrandS, getBrandByIdS, updateBrandS} from "../services/brand.service"
 
 
 export const createBrandC=async(req:Request,res:Response)=>{
@@ -29,6 +29,18 @@ export const getBrandByIdC=async(req:Request,res:Response)=>{
     try{
         const brandData=await getBrandByIdS(req.params.id)
         return res.status(200).json({success:true,brandData})
+    }catch(e:any){
+        console.log(e)
+        res.status(400).json({success:false,error:e.message})
+    }
+}
+
+
+export const updateBrandC=async(req:Request,res:Response)=>{
+    try{
+        const updatedBrandData=await updateBrandS(req.params.id,req.body)
+       if(updatedBrandData) return res.status(200).json({success:true,updatedBrandData})
+
     }catch(e:any){
         console.log(e)
         res.status(400).json({success:false,error:e.message})

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createBrandC, getAllBrandC, getBrandByIdC } from "../controllers/brand.controllers";
+import { createBrandC, getAllBrandC, getBrandByIdC, updateBrandC } from "../controllers/brand.controllers";
 import { verifyAccessToken } from "../middlewares/auth";
 import { validateBrand } from "../middlewares/inputValidation";
 
@@ -11,4 +11,5 @@ router.get("/getBrand/:id",getBrandByIdC)
 
 //this middle ware function will not be applied for above route only after routes
 router.use(verifyAccessToken)
-router.post("/create",validateBrand,createBrandC)
+router.post("/createBrand",validateBrand,createBrandC)
+router.post("/updateBrand/:id",updateBrandC)
