@@ -23,3 +23,14 @@ export const createBrandS=async(brandData:IBrand)=>{
         throw e;
     }
 }
+
+
+export const getAllBrandS=async():Promise<IBrand[]>=>{
+    try{
+        const allBrands=await brandModel.find();
+        return allBrands;
+    }catch(e){
+        console.log(e)
+        throw e;
+    }
+}
