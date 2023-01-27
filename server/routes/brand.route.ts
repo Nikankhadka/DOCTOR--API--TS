@@ -10,10 +10,10 @@ router.get("/getBrand",getAllBrandC)
 router.get("/getBrand/:id",getBrandByIdC)
 
 //this middle ware function will not be applied for above route only after routes
-router.use(verifyAccessToken)
-router.post("/createBrand",validateBrand,createBrandC)
-router.patch("/updateBrand/:id",updateBrandC)
-router.delete("/deleteBrand/:id",deleteBrandC)
+
+router.post("/createBrand",verifyAccessToken,validateBrand,createBrandC)
+router.patch("/updateBrand/:id",verifyAccessToken,updateBrandC)
+router.delete("/deleteBrand/:id",verifyAccessToken,deleteBrandC)
 
 
 export default router;

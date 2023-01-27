@@ -12,9 +12,9 @@ router.get("/getMedicine/:id",getMedicineByIdC)
 
 
 //any middleware function will only apply if it is declared before routes where it is needed to apply
-router.use(verifyAccessToken)
-router.post("/createMedicine",validateMedicine,createMedicineC)
-router.patch("/updateMedicine/:id",updateMedicinbyIdC)
-router.delete("/deleteMedicine/:id",deleteMedicineC);   
+
+router.post("/createMedicine",verifyAccessToken,validateMedicine,createMedicineC)
+router.patch("/updateMedicine/:id",verifyAccessToken,updateMedicinbyIdC)
+router.delete("/deleteMedicine/:id",verifyAccessToken,deleteMedicineC);   
 
 export default router;
