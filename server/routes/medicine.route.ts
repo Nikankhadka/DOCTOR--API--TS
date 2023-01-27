@@ -7,7 +7,7 @@ const router=Router();
 
 
 
-router.get("/getAllMedicine",getAllMedicineC)
+router.get("/getMedicine",getAllMedicineC)
 router.get("/getMedicine/:id",getMedicineByIdC)
 
 
