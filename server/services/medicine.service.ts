@@ -91,6 +91,10 @@ export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
 export const updateMedicineByIdS=async(id:string,newData:Partial<MedicineInput>):Promise<IMedicine>=>{
    try{  
       
+      //check medicine by id 
+      const medicinExist=await medicineModel.findOne({_id:id})
+      if(!medicinExist) throw new Error("Invalid Medicine Id")
+      
       if(newData.brand){
          
         const promises= newData.brand.map(async(brandInfo)=>{

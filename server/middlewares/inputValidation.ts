@@ -89,3 +89,26 @@ export const validateMedicine=async(req:Request,res:Response,next:NextFunction)=
 
 }
     
+
+
+export const validateBrand=async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+      
+        const brandSchema=joi.object({
+            brandname:joi.string().required(),
+            company:joi.string().required(),
+            description:joi.string().required()
+        })
+
+        const{error,value}=await brandSchema.validate(req.body,{abortEarly:false})
+        if(error){
+            console.log(error.details)
+            return res.status(400).json({success:false,message:error.message})
+        }
+        console.log(value)
+        next()
+
+    }catch(err){
+        return res.status(400).json(err)
+    }
+}
