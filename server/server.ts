@@ -16,7 +16,7 @@ import dbConnect from "./Configs/db"
 //importing routes
 import authRoute from "./routes/auth.route"
 import medicineRoute from "./routes/medicine.route"
-
+import brandRoute from"./routes/brand.route"
   
 
 //app level middleware setup
@@ -46,7 +46,7 @@ dbConnect()
 
 app.use("/auth/v1",authRoute)
 app.use("/medicine/v1",medicineRoute)
-
+app.use("/brand/v1",brandRoute)
 
 
 
