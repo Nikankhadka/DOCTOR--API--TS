@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 app.use(cors({
     //defines the origin of the request
-    origin:"http://localhost:3000",
+    origin:"*",
     //headers can be accessed and modified else cant
     credentials:true
 }))

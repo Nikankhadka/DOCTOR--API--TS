@@ -1,6 +1,9 @@
-import { NextFunction,Request,Response } from "express";
+import { NextFunction,query,Request,Response } from "express";
 
 import { createMedicineS, deleteMedicineS, getAllMedicineS, getMedicineByIdS, updateMedicineByIdS } from "../services/medicine.service";
+
+   
+
 
 export const createMedicineC=async(req:Request,res:Response,next:NextFunction)=>{
     try{
@@ -16,7 +19,10 @@ export const createMedicineC=async(req:Request,res:Response,next:NextFunction)=>
 
 export const getAllMedicineC=async(req:Request,res:Response)=>{
     try{
-        const medicineData=await getAllMedicineS();
+        
+        const page:string=req.query.page as string
+        const limit:string=req.query.limit as string
+        const medicineData=await getAllMedicineS(page,limit);
         res.status(200).json({success:true,medicineData})
 
 
