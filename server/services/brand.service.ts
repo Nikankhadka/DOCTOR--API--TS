@@ -25,9 +25,11 @@ export const createBrandS=async(brandData:IBrand)=>{
 }
 
 
-export const getAllBrandS=async():Promise<IBrand[]>=>{
+export const getAllBrandS=async(page:string,limit:string):Promise<IBrand[]>=>{
     try{
-        const allBrands=await brandModel.find();
+        const newlimit=parseInt(limit)
+        const newpage=parseInt(page)
+        const allBrands=await brandModel.find().limit(newlimit*1).skip((newpage-1)*newlimit).sort({brandName:"asc"});
         return allBrands;
     }catch(e){
         console.log(e)

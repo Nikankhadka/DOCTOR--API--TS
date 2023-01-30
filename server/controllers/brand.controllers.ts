@@ -16,7 +16,9 @@ export const createBrandC=async(req:Request,res:Response)=>{
 
 export const getAllBrandC=async(req:Request,res:Response)=>{
     try{
-        const brands=await getAllBrandS();
+        const page:string=req.query.page as string
+        const limit:string=req.query.limit as string
+        const brands=await getAllBrandS(page,limit);
         res.status(200).json({success:true,brands})
        
     }catch(e:any){
