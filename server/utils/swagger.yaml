@@ -7,6 +7,11 @@ info:
     schemas:
         - http
         - https
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
 paths:
   /auth/v1/registerUser:
     post:
@@ -75,8 +80,10 @@ paths:
       tags:
         - User
 
-  /api/brand/v1/createBrand:
+  /brand/v1/createBrand:
     post:
+      security:
+       - Bearer: []
       description: Create a new brand
       requestBody:
         required: true
