@@ -17,7 +17,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 //     },
 //     apis: ['./src/**/*.ts'],
 //   };
-  const swagger = YAML.load('./utils/specs.yaml');
+  const swagger = YAML.load('./utils/swagger.yaml');
 
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swagger));    
 

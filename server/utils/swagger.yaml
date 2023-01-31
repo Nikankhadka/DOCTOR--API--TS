@@ -1,0 +1,214 @@
+openapi: 3.0.0
+info:
+    title: "Doctor API"
+    description: "Documentation for the Doctor API"
+    version: "1.0.0"
+    basePath: "http://localhost:2900"
+    schemas:
+        - http
+        - https
+paths:
+  /auth/v1/registerUser:
+    post:
+      description: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  description: Name of the user
+                lastName:
+                  type: string
+                  description: Last name of the user
+                phoneNumber:
+                  type: string
+                  description: Phone number of the user
+                email:
+                  type: string
+                  description: Email of the user
+                password:
+                  type: string
+                  description: Password of the user
+                
+      responses:
+        200:
+          description: Successful response
+        400:
+          description: Invalid input
+      tags:
+        - User
+  /auth/v1/login:
+    post:
+      security:
+        - bearerAuth: []
+      description: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email of the user
+                password:
+                  type: string
+                  description: Password of the user
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token for authentication
+        401:
+          description: Unauthorized
+      tags:
+        - User
+
+  /api/brand/v1/createBrand:
+    post:
+      description: Create a new brand
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brandName:
+                  type: string
+                  description: Name of the brand
+                description:
+                  type: string
+                  description: Description of the brand
+                company:
+                  type: string
+                  description: Company of the brand
+                medicineCount:
+                  type: integer
+                  description: Number of medicines in the brand
+
+      responses:
+        200:
+          description: Successful response
+        400:
+          description: Invalid input
+      tags:
+        - Brand
+  /getAllBrandS: 
+    get:
+      description: Get all brands
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: ID of the brand
+                    name:
+                      type: string
+                      description: Name of the brand
+                    description:
+                      type: string
+                      description: Description of the brand
+                    
+        400:
+          description: Invalid input
+      tags:
+        - Brand
+  /getBrand/{id}:
+    get:
+      description: Get a brand by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the brand
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID of the brand
+                  name:
+                    type: string
+                    description: Name of the brand
+                  description:
+                    type: string
+                    description: Description of the brand
+        400:
+          description: Invalid input
+      tags:
+        - Brand
+  /updateBrand/{id}:
+    patch:
+      description: Update a brand by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the brand
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the brand
+                description:
+                  type: string
+                  description: Description of the brand
+      responses:
+        200:
+          description: Successful response
+        400:
+          description: Invalid input
+      tags:
+        - Brand
+  /deleteBrand/{id}:
+    delete:
+      description: Delete a brand by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the brand
+      responses:
+        200:
+          description: Successful response
+        400:
+          description: Invalid input
+      tags:
+        - Brand
+      
+    
