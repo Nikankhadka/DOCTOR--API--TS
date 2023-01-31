@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+    title: "Doctor API"
+    description: "Documentation for the Doctor API"
+    version: "1.0.0"
+    basePath: "/api/v1"
+    schemas:
+        - http
+        - https
+paths:
+  /registerUser:
+    post:
+      description: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email of the user
+                password:
+                  type: string
+                  description: Password of the user
+                name:
+                  type: string
+                  description: Name of the user
+      responses:
+        200:
+          description: Successful response
+        400:
+          description: Invalid input
+      tags:
+        - User
+  /login:
+    post:
+      description: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email of the user
+                password:
+                  type: string
+                  description: Password of the user
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token for authentication
+        401:
+          description: Unauthorized
+      tags:
+        - User
