@@ -63,7 +63,7 @@ export const getAllMedicineS=async(page:string,limit:string):Promise<IMedicine[]
       
       const newlimit=parseInt(limit)
       const newpage=parseInt(page)
-      const allMedicine=await medicineModel.find({}).limit(newlimit*1).skip((newpage-1)*newlimit).sort({genericName:"asc"});
+      const allMedicine=await medicineModel.find({}).limit(newlimit*1).skip((newpage-1)*newlimit).sort({genericName:"asc"}).populate("brand.brand");
       console.log(allMedicine);
       if(!allMedicine) throw new Error("Medicine data failed to fetch")
       return allMedicine;
