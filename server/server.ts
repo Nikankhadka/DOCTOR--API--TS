@@ -1,6 +1,25 @@
 //import express function and creare app instance 
+import YAML from 'yamljs';
 import express from "express"
 const app=express()
+
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+
+
+//   const options = {
+//     swaggerDefinition: {
+//       openapi: '2.0.0',
+//       info: {
+//         title: 'My API',
+//         version: '1.0.0',
+//       },
+//     },
+//     apis: ['./src/**/*.ts'],
+//   };
+  const swagger = YAML.load('./utils/swagger.yaml');
+
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swagger));    
 
 
 //necessary imports 
