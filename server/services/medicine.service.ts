@@ -89,7 +89,20 @@ export const getAllMedicineNamesS=async(page:string,limit:string):Promise<IMedic
    }
 
 }
+export const getMedicineCountS=async():Promise<number>=>{
+   try{
+      
+      
+      const medicineCount=await medicineModel.countDocuments({});
+      console.log(medicineCount);
+      if(!medicineCount) throw new Error("Medicine count fetch")
+      return medicineCount;
 
+   }catch(e){
+      throw e;
+   }
+
+}
 export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
    try{
 
