@@ -7,11 +7,12 @@ info:
     schemas:
         - http
         - https
-securityDefinitions:
-  Bearer:
-    type: apiKey
-    name: Authorization
-    in: header
+components:
+  securitySchemes:
+    bearerAuth:
+     type: http
+     scheme: bearer
+     bearerFormat: JWT
 paths:
   /auth/v1/registerUser:
     post:
@@ -81,7 +82,7 @@ paths:
   /brand/v1/createBrand:
     post:
       security:
-       - Bearer: []
+       - bearerAuth: []
       response:
       200:
         description: OK
@@ -92,7 +93,7 @@ paths:
             schema:
               type: object
               properties:
-                brandName:
+                brandname:
                   type: string
                   description: Name of the brand
                 description:
@@ -101,48 +102,29 @@ paths:
                 company:
                   type: string
                   description: Company of the brand
-                medicineCount:
-                  type: integer
-                  description: Number of medicines in the brand
-
+                     
       responses:
         200:
           description: Successful response
         400:
           description: Invalid input
-      tags:
-        - Brand
-  /getBrand/{id}:
+  /getBrand/:id:
     get:
-      description: Get a brand by ID
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: ID of the brand
-      responses:
-        200:
-          description: Successful response
-          content:
+     security:
+       - bearerAuth: []
+     response:
+      200:
+        description: OK
+      requestBody:
+       required: true
+       content:
             application/json:
               schema:
                 type: object
                 properties:
                   id:
-                    type: integer
+                    type: string
                     description: ID of the brand
-                  name:
-                    type: string
-                    description: Name of the brand
-                  description:
-                    type: string
-                    description: Description of the brand
-        400:
-          description: Invalid input
-      tags:
-        - Brand
   /updateBrand/{id}:
     patch:
       description: Update a brand by ID
@@ -238,8 +220,15 @@ paths:
                 basic :
                  type: array
                  items:
-                  type: string
-                  example: [dosing: "1-0-1", duration: "1 month"]   
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the basic
+                    description:
+                      type: string
+                      description: Description of the basic
+
                   
 
                   

@@ -18,8 +18,10 @@ declare module "express-serve-static-core" {
 export const verifyAccessToken=async(req:Request,res:Response,next:NextFunction)=>{
   
     if(!req.headers.authorization) return res.status(401).json({success:false,message:"bearer token not found"});
-    const token = req.headers.authorization;
-    console.log(token)
+    let token = req.headers.authorization;
+    token = token.split(" ")[1];
+    console.log(token);
+    
     try{
     const verifiedtoken=await verifyAccessTokenS(token);
     console.log("token sucessfully verified")
