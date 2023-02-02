@@ -274,7 +274,7 @@ paths:
           description: Invalid input
       tags:
         - Medicine
-  /medicine/v1/getMedicine/:id:
+  /medicine/v1/getMedicine/{id}:
     get:
      security:
        - bearerAuth: []
