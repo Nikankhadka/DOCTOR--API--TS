@@ -95,7 +95,7 @@ export const validateBrand=async(req:Request,res:Response,next:NextFunction)=>{
     try{
       
         const brandSchema=joi.object({
-            brandname:joi.string().required(),
+            brandName:joi.string().required(),
             company:joi.string().required(),
             description:joi.string().required()
         })
