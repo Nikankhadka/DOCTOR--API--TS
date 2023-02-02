@@ -2,11 +2,16 @@ openapi: 3.0.0
 info:
     title: "Doctor API"
     description: "Documentation for the Doctor API"
-    version: "1.0.0"
+    version: 3.0.0
     basePath: "http://localhost:2900"
     schemas:
         - http
         - https
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
 paths:
   /auth/v1/registerUser:
     post:
@@ -43,8 +48,6 @@ paths:
         - User
   /auth/v1/login:
     post:
-      security:
-        - bearerAuth: []
       description: Login a user
       requestBody:
         required: true
@@ -75,9 +78,13 @@ paths:
       tags:
         - User
 
-  /api/brand/v1/createBrand:
+  /brand/v1/createBrand:
     post:
-      description: Create a new brand
+      security:
+       - Bearer: []
+      response:
+      200:
+        description: OK
       requestBody:
         required: true
         content:
@@ -101,33 +108,6 @@ paths:
       responses:
         200:
           description: Successful response
-        400:
-          description: Invalid input
-      tags:
-        - Brand
-  /getAllBrandS: 
-    get:
-      description: Get all brands
-      responses:
-        200:
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      description: ID of the brand
-                    name:
-                      type: string
-                      description: Name of the brand
-                    description:
-                      type: string
-                      description: Description of the brand
-                    
         400:
           description: Invalid input
       tags:
@@ -210,5 +190,66 @@ paths:
           description: Invalid input
       tags:
         - Brand
+  /getBrand:
+    get:
+      description: Get all brands
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID of the brand
+                  name:
+                    type: string
+                    description: Name of the brand
+                  description:
+                    type: string
+                    description: Description of the brand
+        400:
+          description: Invalid input
+      tags:
+        - Brand
+  /medicine/v1/createMedicine:
+    post:
+      security:
+       - Bearer: []
+      description: Get resource by ID
+      response:
+      200:
+        description: OK
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                genericName:
+                  type: string
+                  description: Name of the medicine
+                brand:
+                  type: string
+                  description: Brand of the medicine
+                basic :
+                 type: array
+                 items:
+                  type: string
+                  example: [dosing: "1-0-1", duration: "1 month"]   
+                  
+
+                  
+                  
+              
+                  
+
+                  
+
+
       
+
     
