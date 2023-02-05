@@ -1,4 +1,5 @@
 
+import { Types } from 'mongoose';
 import { IMedicine } from '../interface/Dbinterface';
 import { excelMedicineInput, MedicineInput } from '../interface/input';
 import { brandModel } from '../models/brand';
@@ -189,7 +190,7 @@ export const updateMedicineByIdS=async(id:string,newData:Partial<MedicineInput>)
 
 export const medicineExcelS=async(medicineData:excelMedicineInput[]):Promise<boolean>=>{
    try{
-      console.log(medicineData)
+      
       const promises=medicineData.map(async(medicine)=>{
          //check if brand exist  
          const brandExist=await brandModel.findOne({brandName:medicine.brandName})
@@ -204,32 +205,8 @@ export const medicineExcelS=async(medicineData:excelMedicineInput[]):Promise<boo
             //medicine with medicine with brand already exist so dont create medicine 
             if(brandRepitition) return;
 
-            //since brand exist ,but this medicine doesnot exist create medicne and add brand id d
-            const newMedicine=await medicineModel.create({
-               genericName:medicine.genericName,
-               $push:{
-                  brand:{
-                     brand:brandExist._id,
-                     brandDose:medicine.brandDose,
-                     formulation:medicine.formulation
-                  }
-               },
-               basic:{
-                  usagePharmacologicCategory:medicine.usagePharmacologicCategory,
-                  adultDosing:medicine.adultDosing,
-                  pediatricsDosing:medicine.pediatricsDosing,
-                  renalAdjustedDosing:medicine.renalAdjustedDosing,
-                  hepaticDosing:medicine.hepaticDosing,
-                  administration:medicine.administration,
-                  pregnancyRiskFactor:medicine.pregnancyRiskFactor,
-                  breastfeedingConsiderations:medicine.pregnancyRiskFactor,
-                  contradication:medicine.contradication,
-                  adverseEffects:medicine.adverseEffects,
-                  pharmacology:medicine.pharmacology,
-                  drugInteractions:medicine.drugInteractions
-               }
-            }) 
-            if(newMedicine) return;
+           //this function takes in existing brand_id and medicine data to create new medicine 
+            if(await Cmedicine(brandExist._id,medicine)) return;
          }
 
          //since brand doesnot exist new brand
@@ -254,11 +231,32 @@ export const medicineExcelS=async(medicineData:excelMedicineInput[]):Promise<boo
          }
 
          //now brand is new medicine is new 
-         const newMedicine=await medicineModel.create({
-            genericName:medicine.genericName,
+        const newMedicine=await Cmedicine(newBrand._id,medicine)
+         return;
+
+      })
+
+      await Promise.all(promises);
+      return true;
+   }catch(e){
+      console.log(e)
+      throw e;
+   }
+}
+
+
+//create Medicine from exceldata service function 
+const Cmedicine=async(brandId:Types.ObjectId,medicine:excelMedicineInput):Promise<boolean>=>{
+   try{
+      //could have destructured the data and directly passed the value
+
+
+       //since brand exist ,but this medicine doesnot exist create medicne and add brand id d
+            const newMedicine=await medicineModel.create({
+               genericName:medicine.genericName,
                $push:{
                   brand:{
-                     brand:newBrand._id,
+                     brand:brandId,
                      brandDose:medicine.brandDose,
                      formulation:medicine.formulation
                   }
@@ -276,17 +274,13 @@ export const medicineExcelS=async(medicineData:excelMedicineInput[]):Promise<boo
                   adverseEffects:medicine.adverseEffects,
                   pharmacology:medicine.pharmacology,
                   drugInteractions:medicine.drugInteractions
-         }})
-         
-         await newMedicine.save()
-         return;
+               }
+            }) 
+            await newMedicine.save();
+            return true
 
-      })
-
-      await Promise.all(promises);
-      return true;
    }catch(e){
-      console.log(e)
-      throw e;
+      console.log(e);
+      throw e
    }
 }

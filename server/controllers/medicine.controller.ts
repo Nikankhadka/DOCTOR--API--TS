@@ -113,9 +113,10 @@ export const updateMedicinbyIdC=async(req:Request,res:Response)=>{
          
         //pass array of excel json data into service layer
         const medicinesUploaded=await medicineExcelS(medicineData)
+        if(medicinesUploaded) return res.status(200).json({success:true,message:"Medicine data from excel sheet uploaded succesfully"})
 
-    }catch(e){
+    }catch(e:any){
         console.log(e);
-        throw e;
+        res.status(400).json({success:false,error:e.message})
     }
  }
