@@ -138,33 +138,37 @@ paths:
       
   /brand/v1/updateBrand/{id}:
     patch:
-      description: Update a brand by ID
-      parameters:
+     security:
+       - bearerAuth: []
+     parameters:
         - in: path
           name: id
           schema:
-            type: integer
+            type: string
           required: true
           description: ID of the brand
-      requestBody:
+     requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                name:
+                brandName:
                   type: string
                   description: Name of the brand
                 description:
                   type: string
                   description: Description of the brand
-      responses:
-        200:
+                company:
+                  type: string
+                  description: Company of the brand
+        responses:
+          200:
           description: Successful response
         400:
           description: Invalid input
-      tags:
+        tags:
         - Brand
   /brand/v1/deleteBrand/{id}:
     delete:
@@ -355,7 +359,7 @@ paths:
         - in: path
           name: id
           schema:
-            type: string
+            type: string  
           required: true
           description: ID of the medicine
       requestBody:
