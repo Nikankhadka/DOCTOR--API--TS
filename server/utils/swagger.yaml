@@ -111,7 +111,7 @@ paths:
           description: Invalid input
       tags:
         - Brand
-  /brand/v1/getBrand/:id:
+  /brand/v1/getBrand/{id}:
     get:
      security:
        - bearerAuth: []
@@ -166,7 +166,7 @@ paths:
           description: Invalid input
       tags:
         - Brand
-  /brand/v1/deleteBrand/:id:
+  /brand/v1/deleteBrand/{id}:
     delete:
       description: Delete a brand by ID
       parameters:
@@ -274,28 +274,75 @@ paths:
           description: Invalid input
       tags:
         - Medicine
-  /medicine/v1/getMedicine/:id:
+  /medicine/v1/getMedicine/{id}:
     get:
      security:
        - bearerAuth: []
-     response:
+    parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID of the medicine
+    response:
       200:
-        description: OK
-      requestBody:
-       required: true
-       content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  :id:
-                    type: string
-                    description: ID of the medicine
-      responses:
-        200:
-          description: Successful response
-        400:
-          description: Invalid input
+      content:
+       application/json:
+         schema:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID of the medicine
+            genericName:
+              type: string
+              description: Name of the medicine
+            brand:
+              type: string
+              description: Brand of the medicine
+            basic :
+              type: array
+              properties:
+                usagePharmacologicCategory:
+                  type: string
+                  description: Name of the basic
+                adultDosing:
+                  type: string
+                  description: Description of the basic
+                pediatricDosing:
+                  type: string
+                  description: Description of the basic
+                renalAdjustedDosing:
+                  type: string
+                  description: Description of the basic
+                hepaticDosing:
+                  type: string
+                  description: Description of the basic
+                administration:
+                  type: string
+                  description: Description of the basic
+                pregnancyRiskFactor:
+                  type: string
+                  description: Description of the basic
+                breastfeedingConsiderations:
+                  type: string
+                  description: Description of the basic
+                contradictions:
+                  type: string
+                  description: Description of the basic
+                adverseEffects:
+                  type: string
+                  description: Description of the basic
+                pharmacologicCategory:
+                  type: string
+                  description: Description of the basic
+                drugInteractions:
+                  type: string
+                  description: Description of the basic
+         description: OK
+    400:
+      description: Invalid input  
     tags:
      - Medicine
   
@@ -308,7 +355,7 @@ paths:
         - in: path
           name: id
           schema:
-            type: integer
+            type: string
           required: true
           description: ID of the medicine
       requestBody:
