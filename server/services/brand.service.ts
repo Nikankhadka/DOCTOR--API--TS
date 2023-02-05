@@ -12,7 +12,7 @@ export const createBrandS=async(brandData:IBrand)=>{
         const newBrand=await brandModel.create({
             brandName,
             company,
-            description,
+            description,    
             medicineCount:0
         })
         await newBrand.save();
