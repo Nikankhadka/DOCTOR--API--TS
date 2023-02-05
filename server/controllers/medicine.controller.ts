@@ -1,8 +1,9 @@
 import { NextFunction,query,Request,Response } from "express";
 
-import { createMedicineS, deleteMedicineS, getAllMedicineS, getMedicineByIdS, updateMedicineByIdS,getAllMedicineNamesS,getMedicineCountS } from "../services/medicine.service";
+import { createMedicineS, deleteMedicineS, getAllMedicineS, getMedicineByIdS, updateMedicineByIdS,getAllMedicineNamesS,getMedicineCountS, medicineExcelS } from "../services/medicine.service";
 
-   
+import xlsx from "xlsx"
+import { excelMedicineInput } from "../interface/input";
 
 
 export const createMedicineC=async(req:Request,res:Response,next:NextFunction)=>{
@@ -93,4 +94,28 @@ export const updateMedicinbyIdC=async(req:Request,res:Response)=>{
             res.status(404).json({success:false,err:e.message})
             
         }
+ }
+
+ export const medicineExcelC=async(req:Request,res:Response)=>{
+    try{
+        
+        //first getbook
+        const  medicineBook=xlsx.read(req.file?.buffer,{type:"buffer"});
+        //get sheetNames since single file may contain multiple sheet
+        const sheetNames = medicineBook.SheetNames;
+        //only select first sheet
+         const worksheet = medicineBook.Sheets[sheetNames[0]]
+         //change the rows of data into array of objects with all the column header as property and valye
+         const jsonData  =xlsx.utils.sheet_to_json(worksheet) ;
+         
+         //cast excel data as interface created 
+         const medicineData:excelMedicineInput[]=jsonData as excelMedicineInput[]
+         
+        //pass array of excel json data into service layer
+        const medicinesUploaded=await medicineExcelS(medicineData)
+
+    }catch(e){
+        console.log(e);
+        throw e;
+    }
  }

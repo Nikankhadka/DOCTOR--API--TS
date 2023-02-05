@@ -28,3 +28,27 @@ export interface userInput{
     basic:basicData
 
  }
+
+
+
+ export interface excelMedicineInput{
+   genericName:string,
+   brandName:string,
+    company:string,
+    description:string,
+    brandDose:string,
+    formulation:string
+   _id?:string,
+    usagePharmacologicCategory:string,
+    adultDosing: string,
+    pediatricsDosing:string,
+    renalAdjustedDosing:string,
+    hepaticDosing:string,
+    administration:string,
+    pregnancyRiskFactor:string,
+    breastfeedingConsiderations:string,
+    contradication:string,
+    adverseEffects:string,
+    pharmacology: string,
+    drugInteractions:string
+ }

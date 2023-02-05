@@ -1,6 +1,6 @@
 
 import { IMedicine } from '../interface/Dbinterface';
-import { MedicineInput } from '../interface/input';
+import { excelMedicineInput, MedicineInput } from '../interface/input';
 import { brandModel } from '../models/brand';
 import medicineModel from '../models/medicine';
 
@@ -179,6 +179,111 @@ export const updateMedicineByIdS=async(id:string,newData:Partial<MedicineInput>)
    try{
       const deletedMedicine=await medicineModel.findOneAndDelete({_id:id});
       if(!deletedMedicine) throw new Error("Medicine delete failed")
+      return true;
+   }catch(e){
+      console.log(e)
+      throw e;
+   }
+}
+
+
+export const medicineExcelS=async(medicineData:excelMedicineInput[]):Promise<boolean>=>{
+   try{
+      console.log(medicineData)
+      const promises=medicineData.map(async(medicine)=>{
+         //check if brand exist  
+         const brandExist=await brandModel.findOne({brandName:medicine.brandName})
+         //since brand exist check if this brand d id already exist in medicine brand or not
+         if(brandExist){
+            const brandRepitition=await medicineModel.find({genericName:medicine.genericName,brand:{
+                  $eleMatch:{
+                     brand:brandExist._id
+                  }
+            }})
+
+            //medicine with medicine with brand already exist so dont create medicine 
+            if(brandRepitition) return;
+
+            //since brand exist ,but this medicine doesnot exist create medicne and add brand id d
+            const newMedicine=await medicineModel.create({
+               genericName:medicine.genericName,
+               $push:{
+                  brand:{
+                     brand:brandExist._id,
+                     brandDose:medicine.brandDose,
+                     formulation:medicine.formulation
+                  }
+               },
+               basic:{
+                  usagePharmacologicCategory:medicine.usagePharmacologicCategory,
+                  adultDosing:medicine.adultDosing,
+                  pediatricsDosing:medicine.pediatricsDosing,
+                  renalAdjustedDosing:medicine.renalAdjustedDosing,
+                  hepaticDosing:medicine.hepaticDosing,
+                  administration:medicine.administration,
+                  pregnancyRiskFactor:medicine.pregnancyRiskFactor,
+                  breastfeedingConsiderations:medicine.pregnancyRiskFactor,
+                  contradication:medicine.contradication,
+                  adverseEffects:medicine.adverseEffects,
+                  pharmacology:medicine.pharmacology,
+                  drugInteractions:medicine.drugInteractions
+               }
+            }) 
+            if(newMedicine) return;
+         }
+
+         //since brand doesnot exist new brand
+         const newBrand=await brandModel.create({
+            brandName:medicine.brandName,
+            company:medicine.company,
+            description:medicine.description
+         })
+
+         //check if medicine exist or not 
+
+         const medicineExist=await medicineModel.findOne({genericName:medicine.genericName});
+         if(medicineExist){
+            //just update brand infor
+            medicineExist.brand.push({
+               brand:newBrand._id,
+               brandDose:medicine.brandDose,
+               formulation:medicine.formulation
+            })
+            await medicineExist.save()
+            return;
+         }
+
+         //now brand is new medicine is new 
+         const newMedicine=await medicineModel.create({
+            genericName:medicine.genericName,
+               $push:{
+                  brand:{
+                     brand:newBrand._id,
+                     brandDose:medicine.brandDose,
+                     formulation:medicine.formulation
+                  }
+               },
+               basic:{
+                  usagePharmacologicCategory:medicine.usagePharmacologicCategory,
+                  adultDosing:medicine.adultDosing,
+                  pediatricsDosing:medicine.pediatricsDosing,
+                  renalAdjustedDosing:medicine.renalAdjustedDosing,
+                  hepaticDosing:medicine.hepaticDosing,
+                  administration:medicine.administration,
+                  pregnancyRiskFactor:medicine.pregnancyRiskFactor,
+                  breastfeedingConsiderations:medicine.pregnancyRiskFactor,
+                  contradication:medicine.contradication,
+                  adverseEffects:medicine.adverseEffects,
+                  pharmacology:medicine.pharmacology,
+                  drugInteractions:medicine.drugInteractions
+         }})
+         
+         await newMedicine.save()
+         return;
+
+      })
+
+      await Promise.all(promises);
       return true;
    }catch(e){
       console.log(e)
