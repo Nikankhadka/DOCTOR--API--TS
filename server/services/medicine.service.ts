@@ -192,28 +192,41 @@ export const medicineExcelS=async(medicineData:excelMedicineInput[]):Promise<boo
    try{
       
       const promises=medicineData.map(async(medicine)=>{
-         //check if brand exist  
+          
          const brandExist=await brandModel.findOne({brandName:medicine.brandName})
-         //since brand exist check if this brand d id already exist in medicine brand or not
+         console.log(brandExist)
          if(brandExist){
-            const brandRepitition=await medicineModel.find({genericName:medicine.genericName,brand:{
-                  $eleMatch:{
-                     brand:brandExist._id
-                  }
+            console.log("inside brand exist")
+            const brandRepitition=await medicineModel.find({genericName:medicine.genericName,brand:{brand:brandExist._id
+                  
             }})
 
             //medicine with medicine with brand already exist so dont create medicine 
             if(brandRepitition) return;
 
            //this function takes in existing brand_id and medicine data to create new medicine 
+           brandExist.medicineCount=+1;
+           //check if medicine exist or not
+           const medicineExist=await medicineModel.findOne({genericName:medicine.genericName});
+           if(medicineExist){
+            //just update brand infor
+            medicineExist.brand.push({
+               brand:brandExist._id,
+               brandDose:medicine.brandDose,
+               formulation:medicine.formulation
+            })
+            await medicineExist.save()
+            return;
+           }
             if(await Cmedicine(brandExist._id,medicine)) return;
          }
 
-         //since brand doesnot exist new brand
+         console.log("brand does not exist")
          const newBrand=await brandModel.create({
             brandName:medicine.brandName,
             company:medicine.company,
-            description:medicine.description
+            description:medicine.description,
+            medicineCount:0
          })
 
          //check if medicine exist or not 
@@ -250,17 +263,10 @@ const Cmedicine=async(brandId:Types.ObjectId,medicine:excelMedicineInput):Promis
    try{
       //could have destructured the data and directly passed the value
 
-
+      console.log("inside create new medicine service function")
        //since brand exist ,but this medicine doesnot exist create medicne and add brand id d
             const newMedicine=await medicineModel.create({
                genericName:medicine.genericName,
-               $push:{
-                  brand:{
-                     brand:brandId,
-                     brandDose:medicine.brandDose,
-                     formulation:medicine.formulation
-                  }
-               },
                basic:{
                   usagePharmacologicCategory:medicine.usagePharmacologicCategory,
                   adultDosing:medicine.adultDosing,
@@ -276,7 +282,15 @@ const Cmedicine=async(brandId:Types.ObjectId,medicine:excelMedicineInput):Promis
                   drugInteractions:medicine.drugInteractions
                }
             }) 
-            await newMedicine.save();
+            
+            newMedicine.brand.push(
+               {
+                  brand:brandId,
+                  brandDose:medicine.brandDose,
+                  formulation:medicine.formulation
+               }
+            );
+            await newMedicine.save()
             return true
 
    }catch(e){

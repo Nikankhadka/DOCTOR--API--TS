@@ -1,0 +1,17 @@
+The code is a JavaScript code for a server-side application. The code defines two functions: medicineExcelS and Cmedicine.
+
+medicineExcelS is an async function that takes in an array of medicineData and returns a promise that resolves to a boolean value. The function tries to map over the array of medicineData and performs the following operations:
+
+Check if a brand with the name medicine.brandName exists by using brandModel.findOne({brandName:medicine.brandName}).
+If the brand exists, it checks if the brand has been repeated by using medicineModel.find({genericName:medicine.genericName,brand:{brand:brandExist._id}}).
+If the brand repetition exists, the function returns.
+If the brand repetition does not exist, it updates the brand count and then checks if the medicine exists by using medicineModel.findOne({genericName:medicine.genericName}).
+If the medicine exists, it updates the brand information.
+If the medicine does not exist, it calls the function Cmedicine with brandExist._id and medicine as arguments.
+If the brand does not exist, it creates a new brand by using brandModel.create({brandName:medicine.brandName,company:medicine.company,description:medicine.description,medicineCount:0}).
+It then checks if the medicine exists by using medicineModel.findOne({genericName:medicine.genericName}).
+If the medicine exists, it updates the brand information.
+If the medicine does not exist, it calls the function Cmedicine with newBrand._id and medicine as arguments.
+Cmedicine is an async function that takes in two arguments, brandId and medicine. The function tries to create a new medicine by using medicineModel.create({genericName:medicine.genericName,...}) and adds the brand information to the newly created medicine using newMedicine.brand.push. Finally, it saves the new medicine using await newMedicine.save().
+
+Note: This code assumes that brandModel and medicineModel are mongoose models for brands and medicines, respectively, and that the function Cmedicine is used to create a new medicine from the input data.
