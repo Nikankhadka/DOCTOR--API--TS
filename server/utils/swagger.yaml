@@ -197,7 +197,6 @@ paths:
         content:
           application/json:
             schema:
-              type: object
               properties:
                 genericName:
                   type: string
@@ -388,12 +387,12 @@ paths:
                     drugInteractions:
                       type: string
                       description: Description of the basic
-        responses:
+      responses:
          200:
           description: Successful response
-        400:
+         400:
           description: Invalid input
-        tags:
+      tags:
          - Medicine
 
   /medicine/v1/deleteMedicine/{id}:
@@ -416,71 +415,7 @@ paths:
       tags:
         - Medicine
         
-  /medicine/v1/getMedicine:
-    get:
-      security:
-       - bearerAuth: []
-      description: Get all medicines
-      responses:
-        200:
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: ID of the medicine
-                  genericName:
-                    type: string
-                    description: Name of the medicine
-                  brand:
-                    type: string
-                    description: Brand of the medicine
-                  basic :
-                    type: object
-                    properties:
-                      usagePharmacologicCategory:
-                        type: string
-                        description: Name of the basic
-                      adultDosing:
-                        type: string
-                        description: Description of the basic
-                      pediatricDosing:
-                        type: string
-                        description: Description of the basic
-                      renalAdjustedDosing:
-                        type: string
-                        description: Description of the basic
-                      hepaticDosing:
-                        type: string
-                        description: Description of the basic
-                      administration:
-                        type: string
-                        description: Description of the basic
-                      pregnancyRiskFactor:
-                        type: string
-                        description: Description of the basic
-                      breastfeedingConsiderations:
-                        type: string
-                        description: Description of the basic
-                      contradictions:
-                        type: string
-                        description: Description of the basic
-                      adverseEffects:
-                        type: string
-                        description: Description of the basic
-                      pharmacologicCategory:
-                        type: string
-                        description: Description of the basic
-                      drugInteractions:
-                        type: string
-                        description: Description of the basic
-        400:
-          description: Invalid input
-      tags:
-        - Medicine
+
 
   
 
