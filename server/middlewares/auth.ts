@@ -20,8 +20,8 @@ export const verifyAccessToken=async(req:Request,res:Response,next:NextFunction)
     
     if(!req.headers.authorization) return res.status(401).json({success:false,message:"bearer token not found"});
     let token = req.headers.authorization;
-    token = token.split(" ")[1];
-   console.log(token)
+//     token = token.split(" ")[1];
+//    console.log(token)
     
     try{
     const verifiedtoken=await verifyAccessTokenS(token);
