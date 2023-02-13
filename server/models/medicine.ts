@@ -7,6 +7,7 @@ const medicineSchema = new Schema({
   genericName: {
     type: String,
     required: true,
+    unique:true
   },
   brand: [
     {
@@ -68,7 +69,6 @@ const medicineSchema = new Schema({
     },
     drugInteractions: {
       type: String,
-      required: true,
     },
   },
 });

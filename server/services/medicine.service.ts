@@ -7,7 +7,7 @@ import medicineModel from '../models/medicine';
 
 
 
-export const createMedicineS = async(medicineData:MedicineInput):Promise<IMedicine> =>{
+export const createMedicineS = async(medicineData:MedicineInput|Partial<MedicineInput>):Promise<IMedicine> =>{
    try{
     const{genericName,brand,basic}=medicineData;
     //create brand by looping through brand array for each information 
@@ -16,7 +16,7 @@ export const createMedicineS = async(medicineData:MedicineInput):Promise<IMedici
     if(medicineExist) throw new Error("Medicine already exist");
 
     
-   const promises=brand.map(async(brandinfo)=>{
+   const promises=brand!.map(async(brandinfo)=>{
 
    const brandExist= await brandModel.findOne({brandName:brandinfo.brandName})     
       if(brandExist){   
@@ -188,113 +188,3 @@ export const updateMedicineByIdS=async(id:string,newData:Partial<MedicineInput>)
 }
 
 
-export const medicineExcelS=async(medicineData:excelMedicineInput[]):Promise<boolean>=>{
-   try{
-      
-      const promises=medicineData.map(async(medicine)=>{
-          
-         const brandExist=await brandModel.findOne({brandName:medicine.brandName})
-         console.log(brandExist)
-         if(brandExist){
-            console.log("inside brand exist")
-            const brandRepitition=await medicineModel.find({genericName:medicine.genericName,brand:{brand:brandExist._id
-                  
-            }})
-
-            //medicine with medicine with brand already exist so dont create medicine 
-            if(brandRepitition) return;
-
-           //this function takes in existing brand_id and medicine data to create new medicine 
-           brandExist.medicineCount=+1;
-           //check if medicine exist or not
-           const medicineExist=await medicineModel.findOne({genericName:medicine.genericName});
-           if(medicineExist){
-            //just update brand infor
-            medicineExist.brand.push({
-               brand:brandExist._id,
-               brandDose:medicine.brandDose,
-               formulation:medicine.formulation
-            })
-            await medicineExist.save()
-            return;
-           }
-            if(await Cmedicine(brandExist._id,medicine)) return;
-         }
-
-         console.log("brand does not exist")
-         const newBrand=await brandModel.create({
-            brandName:medicine.brandName,
-            company:medicine.company,
-            description:medicine.description,
-            medicineCount:0
-         })
-
-         //check if medicine exist or not 
-
-         const medicineExist=await medicineModel.findOne({genericName:medicine.genericName});
-         if(medicineExist){
-            //just update brand infor
-            medicineExist.brand.push({
-               brand:newBrand._id,
-               brandDose:medicine.brandDose,
-               formulation:medicine.formulation
-            })
-            await medicineExist.save()
-            return;
-         }
-
-         //now brand is new medicine is new 
-        const newMedicine=await Cmedicine(newBrand._id,medicine)
-         return;
-
-      })
-
-      await Promise.all(promises);
-      return true;
-   }catch(e){
-      console.log(e)
-      throw e;
-   }
-}
-
-
-//create Medicine from exceldata service function 
-const Cmedicine=async(brandId:Types.ObjectId,medicine:excelMedicineInput):Promise<boolean>=>{
-   try{
-      //could have destructured the data and directly passed the value
-
-      console.log("inside create new medicine service function")
-       //since brand exist ,but this medicine doesnot exist create medicne and add brand id d
-            const newMedicine=await medicineModel.create({
-               genericName:medicine.genericName,
-               basic:{
-                  usagePharmacologicCategory:medicine.usagePharmacologicCategory,
-                  adultDosing:medicine.adultDosing,
-                  pediatricsDosing:medicine.pediatricsDosing,
-                  renalAdjustedDosing:medicine.renalAdjustedDosing,
-                  hepaticDosing:medicine.hepaticDosing,
-                  administration:medicine.administration,
-                  pregnancyRiskFactor:medicine.pregnancyRiskFactor,
-                  breastfeedingConsiderations:medicine.pregnancyRiskFactor,
-                  contradication:medicine.contradication,
-                  adverseEffects:medicine.adverseEffects,
-                  pharmacology:medicine.pharmacology,
-                  drugInteractions:medicine.drugInteractions
-               }
-            }) 
-            
-            newMedicine.brand.push(
-               {
-                  brand:brandId,
-                  brandDose:medicine.brandDose,
-                  formulation:medicine.formulation
-               }
-            );
-            await newMedicine.save()
-            return true
-
-   }catch(e){
-      console.log(e);
-      throw e
-   }
-}

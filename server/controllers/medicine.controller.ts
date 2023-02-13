@@ -1,9 +1,10 @@
 import { NextFunction,query,Request,Response } from "express";
 
-import { createMedicineS, deleteMedicineS, getAllMedicineS, getMedicineByIdS, updateMedicineByIdS,getAllMedicineNamesS,getMedicineCountS, medicineExcelS } from "../services/medicine.service";
+import { createMedicineS, deleteMedicineS, getAllMedicineS, getMedicineByIdS, updateMedicineByIdS,getAllMedicineNamesS,getMedicineCountS } from "../services/medicine.service";
 
 import xlsx from "xlsx"
-import { excelMedicineInput } from "../interface/input";
+import { excelMedicineInput, MedicineInput } from "../interface/input";
+
 
 
 export const createMedicineC=async(req:Request,res:Response,next:NextFunction)=>{
@@ -108,12 +109,49 @@ export const updateMedicinbyIdC=async(req:Request,res:Response)=>{
          //change the rows of data into array of objects with all the column header as property and valye
          const jsonData  =xlsx.utils.sheet_to_json(worksheet) ;
          
-         //cast excel data as interface created 
          const medicineData:excelMedicineInput[]=jsonData as excelMedicineInput[]
-         
-        //pass array of excel json data into service layer
-        const medicinesUploaded=await medicineExcelS(medicineData)
-        if(medicinesUploaded) return res.status(200).json({success:true,message:"Medicine data from excel sheet uploaded succesfully"})
+        
+         let modifyMedicine:Partial<MedicineInput>={
+            genericName:medicineData[0].genericName,
+            basic:{
+                usagePharmacologicCategory:medicineData[0].usagePharmacologicCategory,
+                adultDosing:medicineData[0].adultDosing,
+                pediatricsDosing:medicineData[0].pediatricsDosing,
+                renalAdjustedDosing:medicineData[0].renalAdjustedDosing,
+                hepaticDosing:medicineData[0].hepaticDosing,
+                administration:medicineData[0].administration,
+                pregnancyRiskFactor:medicineData[0].pregnancyRiskFactor,
+                breastfeedingConsiderations:medicineData[0].pregnancyRiskFactor,
+                contradication:medicineData[0].contradication,
+                adverseEffects:medicineData[0].adverseEffects,
+                pharmacology:medicineData[0].pharmacology,
+                drugInteractions:medicineData[0].drugInteractions
+             },
+             brand:[]
+         }
+        
+
+         const promises=medicineData.map(async(medicine)=>{
+                const brandExist= await modifyMedicine.brand?.some(data=>data.brandName===medicine.brandName);
+                if(brandExist) return;
+
+                //since brand is new 
+                modifyMedicine.brand?.push({
+                    brandName:medicine.brandName,
+                    company:medicine.company,
+                    description:medicine.description,
+                    brandDose:medicine.brandDose,
+                    formulation:medicine.formulation
+                })
+         })
+
+         await Promise.resolve(promises)
+
+         console.log(modifyMedicine)
+
+
+        const medicinesUploaded=await createMedicineS(modifyMedicine)
+         if(medicinesUploaded) return res.status(200).json({success:true,message:"Medicine data from excel sheet uploaded succesfully"})
 
     }catch(e:any){
         console.log(e);

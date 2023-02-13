@@ -14,7 +14,7 @@ export interface userInput{
 
  interface brandData{
    brand?:Types.ObjectId,
-   Delete:boolean,
+   Delete?:boolean,
     brandName?:string,
     company?:string,
     description?:string,
@@ -52,3 +52,5 @@ export interface userInput{
     pharmacology: string,
     drugInteractions:string
  }
+
+

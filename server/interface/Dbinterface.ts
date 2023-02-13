@@ -41,7 +41,7 @@ interface brandData{
 }
 
 export interface basicData{
-    _id:string,
+    _id?:string,
     usagePharmacologicCategory:string,
     adultDosing: string,
     pediatricsDosing:string,
