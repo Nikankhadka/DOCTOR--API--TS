@@ -104,6 +104,7 @@ export const getMedicineCountS=async():Promise<number>=>{
    }
 
 }
+
 export const getMedicineByIdS=async(id:string):Promise<IMedicine>=>{
    try{
 

@@ -12,6 +12,20 @@ const medicineSchema = new Schema({
   brand: [
     {
       brand:{type:Types.ObjectId,ref:"Brand"},
+//brand will contain the below props on get since brand will be populated 
+  //       type: String,
+  //       required: true
+  //   },
+  //   company: {
+  //       type: String,
+  //       required: true
+  //   },
+  //  description:{
+  //       type: String,
+  //       required: true
+  //  },
+  //  medicineCount:Number
+
       brandDose: {
         type: String,
         

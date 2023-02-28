@@ -105,10 +105,12 @@ export const updateMedicinbyIdC=async(req:Request,res:Response)=>{
         //get sheetNames since single file may contain multiple sheet
         const sheetNames = medicineBook.SheetNames;
 
+        
 
     //loop thorugh each sheet then perform task of medicine data upload
     const promise1=sheetNames.map(async(currentSheet)=>{
 
+            console.log(currentSheet)
              //select the current sheet 
          const worksheet = medicineBook.Sheets[currentSheet]
          //change the rows of data into array of objects with all the column header as property and valye
@@ -137,6 +139,7 @@ export const updateMedicinbyIdC=async(req:Request,res:Response)=>{
              brand:[]
          }
 
+       
          //loop through row of medicine data
          const medicinePromise=medicineData.map(async(medicine)=>{
          const brandExist= await singleMedicineData.brand?.some(data=>data.brandName===medicine.brandName);
