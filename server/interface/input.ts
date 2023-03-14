@@ -21,6 +21,15 @@ export interface userInput{
     brandDose:string,
     formulation:string,
  }
+ interface brandData{
+   brand:Types.ObjectId|{
+   brandName:string,
+   company:string,
+   description:string
+   },
+   brandDose:string,
+   formulation:string,
+}
  
  export interface MedicineInput{
     genericName:string,
